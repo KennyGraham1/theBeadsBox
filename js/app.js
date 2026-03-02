@@ -1,0 +1,490 @@
+// ====== Configure WhatsApp ======
+// Replace these two values
+const WHATSAPP_PHONE_E164 = "233000000000"; // Example Ghana country code 233, then number. No plus sign.
+const WHATSAPP_CATALOGUE_URL = "https://wa.me/c/233000000000"; // Replace with your WhatsApp Business catalogue link
+
+// Currency symbol and format
+const CURRENCY = "GHS";
+const fmtMoney = (n) => `${CURRENCY} ${Number(n).toFixed(2)}`;
+
+// ====== Product data (edit as needed) ======
+const PRODUCTS = [
+  {
+    id: "necklace-01",
+    name: "Kente Inspired Beaded Necklace",
+    description: "Bold statement necklace with traditional pattern inspiration. Lightweight and comfortable.",
+    price: 180,
+    images: ["assets/images/necklace-1.svg"],
+    colours: [
+      { name: "Emerald", hex: "#046A38" },
+      { name: "Nude", hex: "#E3C4A8" },
+      { name: "Gold", hex: "#C9A227" },
+      { name: "Black", hex: "#1A1A1A" },
+      { name: "Red", hex: "#B3261E" }
+    ]
+  },
+  {
+    id: "bracelet-01",
+    name: "Classic Beaded Bracelet",
+    description: "Everyday bracelet with a clean finish. Perfect for stacking.",
+    price: 65,
+    images: ["assets/images/bracelet-1.svg"],
+    colours: [
+      { name: "Nude", hex: "#E3C4A8" },
+      { name: "Emerald", hex: "#046A38" },
+      { name: "Teal", hex: "#0E7C7B" },
+      { name: "Brown", hex: "#6B4F3B" }
+    ]
+  },
+  {
+    id: "earrings-01",
+    name: "Beaded Drop Earrings",
+    description: "Elegant drop earrings with vibrant beadwork. Ideal for events and gifting.",
+    price: 90,
+    images: ["assets/images/earrings-1.svg"],
+    colours: [
+      { name: "Gold", hex: "#C9A227" },
+      { name: "White", hex: "#F6F6F6" },
+      { name: "Black", hex: "#1A1A1A" },
+      { name: "Orange", hex: "#D97706" }
+    ]
+  },
+  {
+    id: "anklet-01",
+    name: "Minimal Beaded Anklet",
+    description: "Delicate anklet for everyday wear. Adjustable fit.",
+    price: 55,
+    images: ["assets/images/anklet-1.svg"],
+    colours: [
+      { name: "Emerald", hex: "#046A38" },
+      { name: "Nude", hex: "#E3C4A8" },
+      { name: "Pink", hex: "#D946EF" },
+      { name: "Blue", hex: "#2563EB" }
+    ]
+  },
+  {
+    id: "set-01",
+    name: "Matching Set: Necklace + Bracelet",
+    description: "Coordinated set with custom bead colour options. Great for gifting.",
+    price: 230,
+    images: ["assets/images/set-1.svg"],
+    colours: [
+      { name: "Emerald", hex: "#046A38" },
+      { name: "Nude", hex: "#E3C4A8" },
+      { name: "Gold", hex: "#C9A227" },
+      { name: "Maroon", hex: "#7F1D1D" }
+    ]
+  }
+];
+
+// ====== State ======
+const STORAGE_KEY = "afroBeadsCartV1";
+let cart = loadCart();
+let activeViewProducts = [...PRODUCTS];
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+function saveCart() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+  updateCartUI();
+}
+function cartCount() {
+  return cart.reduce((sum, item) => sum + item.qty, 0);
+}
+function cartTotal() {
+  return cart.reduce((sum, item) => sum + item.qty * item.price, 0);
+}
+
+// ====== WhatsApp helpers ======
+function waLinkWithText(text) {
+  const encoded = encodeURIComponent(text);
+  return `https://wa.me/c/233552845069`;
+}
+
+function productInquiryText(product, selectedColours, note) {
+  const colourText = selectedColours?.length ? selectedColours.join(", ") : "No preference selected";
+  const noteText = note?.trim() ? `\nCustom note: ${note.trim()}` : "";
+  return `Hello, I would like to enquire about:\n\n${product.name}\nPrice: ${fmtMoney(product.price)}\nPreferred bead colours: ${colourText}${noteText}\n\nPlease share availability and delivery options.`;
+}
+
+function cartCheckoutText() {
+  if (!cart.length) return "Hello, I would like to place an order. My cart is empty at the moment.";
+  const lines = cart.map((item, idx) => {
+    const colours = item.selectedColours?.length ? item.selectedColours.join(", ") : "No preference selected";
+    const note = item.note?.trim() ? ` | Note: ${item.note.trim()}` : "";
+    return `${idx + 1}. ${item.name} | Qty: ${item.qty} | ${fmtMoney(item.price)} each | Colours: ${colours}${note}`;
+  });
+
+  return `Hello, I would like to checkout with the following items:\n\n${lines.join("\n")}\n\nTotal: ${fmtMoney(cartTotal())}\n\nPlease confirm availability, delivery fees, and payment details.`;
+}
+
+// ====== DOM ======
+const productGrid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+
+const cartBtn = document.getElementById("cartBtn");
+const cartDrawer = document.getElementById("cartDrawer");
+const cartItemsEl = document.getElementById("cartItems");
+const cartTotalEl = document.getElementById("cartTotal");
+const cartCountEl = document.getElementById("cartCount");
+const checkoutWhatsAppBtn = document.getElementById("checkoutWhatsAppBtn");
+const clearCartBtn = document.getElementById("clearCartBtn");
+
+// WhatsApp links
+const waCatalogueTop = document.getElementById("waCatalogueTop");
+const waCatalogueHero = document.getElementById("waCatalogueHero");
+const waCatalogueContact = document.getElementById("waCatalogueContact");
+const waChatContact = document.getElementById("waChatContact");
+const waFloating = document.getElementById("waFloating");
+
+// Nav mobile toggle
+const navToggle = document.querySelector(".nav-toggle");
+const navLinks = document.getElementById("navLinks");
+
+init();
+
+function init() {
+  // Set year
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Wire WhatsApp catalogue links
+  [waCatalogueTop, waCatalogueHero, waCatalogueContact, waFloating].forEach((el) => {
+    if (!el) return;
+    el.href = WHATSAPP_CATALOGUE_URL;
+  });
+
+  // General WhatsApp chat link
+  if (waChatContact) {
+    waChatContact.href = waLinkWithText("Hello, I would like to enquire about beaded jewellery from TheBeadsBox.");
+  }
+
+  // Render products
+  renderProducts(PRODUCTS);
+
+  // Search and sort
+  searchInput?.addEventListener("input", () => applyFilters());
+  sortSelect?.addEventListener("change", () => applyFilters());
+
+  // Cart drawer open close
+  cartBtn?.addEventListener("click", () => openDrawer());
+  cartDrawer?.addEventListener("click", (e) => {
+    const t = e.target;
+    if (t && t.hasAttribute("data-close-drawer")) closeDrawer();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !cartDrawer.hasAttribute("hidden")) closeDrawer();
+  });
+
+  clearCartBtn?.addEventListener("click", () => {
+    cart = [];
+    saveCart();
+  });
+
+  checkoutWhatsAppBtn?.addEventListener("click", () => {
+    checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+  });
+
+  // Contact form sends via WhatsApp
+  const contactForm = document.getElementById("contactForm");
+  contactForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fd = new FormData(contactForm);
+    const name = (fd.get("name") || "").toString().trim();
+    const email = (fd.get("email") || "").toString().trim();
+    const message = (fd.get("message") || "").toString().trim();
+
+    if (!name || !message) {
+      alert("Please enter your name and message.");
+      return;
+    }
+
+    const text = `Hello, my name is ${name}.${email ? ` Email: ${email}.` : ""}\n\n${message}`;
+    window.open(waLinkWithText(text), "_blank", "noopener,noreferrer");
+    contactForm.reset();
+  });
+
+  // Mobile nav toggle
+  navToggle?.addEventListener("click", () => {
+    const open = navLinks.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", String(open));
+  });
+
+  // Close mobile nav when clicking a link
+  navLinks?.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      navLinks.classList.remove("open");
+      navToggle?.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  updateCartUI();
+}
+
+function applyFilters() {
+  const q = (searchInput?.value || "").toLowerCase().trim();
+  let list = PRODUCTS.filter((p) => {
+    if (!q) return true;
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.description.toLowerCase().includes(q)
+    );
+  });
+
+  const sort = sortSelect?.value || "featured";
+  if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
+  if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
+  if (sort === "name-asc") list.sort((a, b) => a.name.localeCompare(b.name));
+
+  activeViewProducts = list;
+  renderProducts(list);
+}
+
+function renderProducts(products) {
+  if (!productGrid) return;
+  productGrid.innerHTML = "";
+
+  products.forEach((p) => {
+    const card = document.createElement("article");
+    card.className = "product-card";
+
+    const imgSrc = p.images?.[0] || "";
+    const defaultSelected = [p.colours?.[0]?.name].filter(Boolean);
+
+    card.innerHTML = `
+      <div class="product-media">
+        <img
+          src="${imgSrc}"
+          alt="${escapeHtml(p.name)}"
+          width="900"
+          height="675"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="product-body">
+        <h3 class="product-title">${escapeHtml(p.name)}</h3>
+        <p class="product-desc">${escapeHtml(p.description)}</p>
+
+        <div class="product-row">
+          <div class="price">${fmtMoney(p.price)}</div>
+          <a class="btn btn-secondary" data-inquire="${p.id}" href="#" target="_blank" rel="noopener">
+            Enquire
+          </a>
+        </div>
+
+        <div>
+          <p class="swatch-label">Choose bead colour preference</p>
+          <div class="swatches" data-swatches="${p.id}"></div>
+        </div>
+
+        <div class="option-note">
+          <input data-note="${p.id}" type="text" placeholder="Optional note, for example add white accents" />
+        </div>
+
+        <button class="btn btn-primary" type="button" data-add="${p.id}">
+          Add to cart
+        </button>
+      </div>
+    `;
+
+    productGrid.appendChild(card);
+
+    // Build swatches
+    const swatchesEl = card.querySelector(`[data-swatches="${p.id}"]`);
+    const selected = new Set(defaultSelected);
+
+    p.colours.forEach((c) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "swatch";
+      btn.style.background = c.hex;
+      btn.setAttribute("aria-label", c.name);
+      btn.setAttribute("title", c.name);
+      btn.setAttribute("aria-pressed", selected.has(c.name) ? "true" : "false");
+
+      btn.addEventListener("click", () => {
+        // Multi select: toggle
+        if (selected.has(c.name)) selected.delete(c.name);
+        else selected.add(c.name);
+        btn.setAttribute("aria-pressed", selected.has(c.name) ? "true" : "false");
+      });
+
+      swatchesEl.appendChild(btn);
+    });
+
+    // Enquire link opens WhatsApp with selected colours and note
+    const enquireLink = card.querySelector(`[data-inquire="${p.id}"]`);
+    enquireLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const note = card.querySelector(`[data-note="${p.id}"]`)?.value || "";
+      const text = productInquiryText(p, Array.from(selected), note);
+      enquireLink.href = waLinkWithText(text);
+      window.open(enquireLink.href, "_blank", "noopener,noreferrer");
+    });
+
+    // Add to cart button
+    const addBtn = card.querySelector(`[data-add="${p.id}"]`);
+    addBtn.addEventListener("click", () => {
+      const note = card.querySelector(`[data-note="${p.id}"]`)?.value || "";
+      addToCart(p, Array.from(selected), note);
+    });
+  });
+
+  // Re-observe cards for staggered animation
+  if (typeof observeProductCards === "function") observeProductCards();
+}
+
+function addToCart(product, selectedColours, note) {
+  const existing = cart.find((x) => x.id === product.id && sameSelection(x.selectedColours, selectedColours) && (x.note || "") === (note || ""));
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images?.[0] || "",
+      selectedColours: selectedColours || [],
+      note: (note || "").trim(),
+      qty: 1
+    });
+  }
+  saveCart();
+  openDrawer();
+}
+
+function sameSelection(a = [], b = []) {
+  if (a.length !== b.length) return false;
+  const A = [...a].sort().join("|");
+  const B = [...b].sort().join("|");
+  return A === B;
+}
+
+function updateCartUI() {
+  if (cartCountEl) cartCountEl.textContent = String(cartCount());
+  if (cartTotalEl) cartTotalEl.textContent = fmtMoney(cartTotal());
+
+  if (!cartItemsEl) return;
+
+  if (!cart.length) {
+    cartItemsEl.innerHTML = `<p class="muted">Your cart is empty. Add items from the products section.</p>`;
+    return;
+  }
+
+  cartItemsEl.innerHTML = "";
+  cart.forEach((item, idx) => {
+    const el = document.createElement("div");
+    el.className = "cart-item";
+    const colours = item.selectedColours?.length ? item.selectedColours.join(", ") : "No preference selected";
+    const note = item.note ? item.note : "";
+
+    el.innerHTML = `
+      <img src="${item.image}" alt="${escapeHtml(item.name)}" width="140" height="140" loading="lazy" decoding="async" />
+      <div>
+        <h4>${escapeHtml(item.name)}</h4>
+        <div class="meta">Colours: ${escapeHtml(colours)}${note ? ` | Note: ${escapeHtml(note)}` : ""}</div>
+        <div class="row">
+          <strong>${fmtMoney(item.price)}</strong>
+          <div class="qty" aria-label="Quantity controls">
+            <button type="button" aria-label="Decrease quantity" data-dec="${idx}">-</button>
+            <span aria-label="Quantity">${item.qty}</span>
+            <button type="button" aria-label="Increase quantity" data-inc="${idx}">+</button>
+            <button type="button" aria-label="Remove item" data-rm="${idx}">Remove</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    cartItemsEl.appendChild(el);
+  });
+
+  // Wire quantity buttons
+  cartItemsEl.querySelectorAll("[data-inc]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.getAttribute("data-inc"));
+      cart[i].qty += 1;
+      saveCart();
+    });
+  });
+  cartItemsEl.querySelectorAll("[data-dec]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.getAttribute("data-dec"));
+      cart[i].qty -= 1;
+      if (cart[i].qty <= 0) cart.splice(i, 1);
+      saveCart();
+    });
+  });
+  cartItemsEl.querySelectorAll("[data-rm]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.getAttribute("data-rm"));
+      cart.splice(i, 1);
+      saveCart();
+    });
+  });
+
+  // Update checkout link each time cart changes
+  checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+}
+
+function openDrawer() {
+  if (!cartDrawer) return;
+  cartDrawer.removeAttribute("hidden");
+  document.body.style.overflow = "hidden";
+  checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+}
+function closeDrawer() {
+  if (!cartDrawer) return;
+  cartDrawer.setAttribute("hidden", "");
+  document.body.style.overflow = "";
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+// ====== Scroll-triggered reveal animations ======
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+);
+
+document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+// Staggered product card reveals
+function observeProductCards() {
+  const cards = document.querySelectorAll(".product-card:not(.visible)");
+  const cardObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((e) => e.isIntersecting);
+      visible.forEach((entry, i) => {
+        setTimeout(() => {
+          entry.target.classList.add("visible");
+          cardObserver.unobserve(entry.target);
+        }, i * 80);
+      });
+    },
+    { threshold: 0.1 }
+  );
+  cards.forEach((card) => cardObserver.observe(card));
+}
+observeProductCards();

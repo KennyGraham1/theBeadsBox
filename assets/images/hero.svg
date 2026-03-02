@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="700" viewBox="0 0 900 700">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F0DCC8"/>
+      <stop offset="100%" stop-color="#E3C4A8"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="700" fill="url(#bg)"/>
+  <!-- Decorative arch -->
+  <ellipse cx="450" cy="720" rx="380" ry="380" fill="none" stroke="#046A38" stroke-width="1.5" opacity="0.12"/>
+  <ellipse cx="450" cy="720" rx="340" ry="340" fill="none" stroke="#046A38" stroke-width="1" opacity="0.08"/>
+  <!-- Necklace arrangement -->
+  <g transform="translate(450,290)">
+    <!-- Main necklace arc -->
+    <path d="M-160,-80 Q-180,60 -80,140 Q0,190 80,140 Q180,60 160,-80" fill="none" stroke="#046A38" stroke-width="3" opacity="0.6"/>
+    <!-- Beads along necklace -->
+    <circle cx="-155" cy="-60" r="10" fill="#046A38" opacity="0.85"/>
+    <circle cx="-160" cy="-30" r="11" fill="#C9A227" opacity="0.85"/>
+    <circle cx="-162" cy="2" r="10" fill="#E3C4A8" opacity="0.85" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-158" cy="34" r="11" fill="#046A38" opacity="0.85"/>
+    <circle cx="-148" cy="64" r="10" fill="#C9A227" opacity="0.85"/>
+    <circle cx="-132" cy="90" r="11" fill="#1A1A1A" opacity="0.85"/>
+    <circle cx="-110" cy="114" r="10" fill="#046A38" opacity="0.85"/>
+    <circle cx="-82" cy="132" r="11" fill="#E3C4A8" opacity="0.85" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-50" cy="146" r="12" fill="#C9A227" opacity="0.85"/>
+    <circle cx="-16" cy="152" r="13" fill="#046A38" opacity="0.9"/>
+    <circle cx="18" cy="152" r="13" fill="#B3261E" opacity="0.85"/>
+    <circle cx="52" cy="146" r="12" fill="#C9A227" opacity="0.85"/>
+    <circle cx="82" cy="132" r="11" fill="#E3C4A8" opacity="0.85" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="110" cy="114" r="10" fill="#046A38" opacity="0.85"/>
+    <circle cx="132" cy="90" r="11" fill="#1A1A1A" opacity="0.85"/>
+    <circle cx="148" cy="64" r="10" fill="#C9A227" opacity="0.85"/>
+    <circle cx="158" cy="34" r="11" fill="#046A38" opacity="0.85"/>
+    <circle cx="162" cy="2" r="10" fill="#E3C4A8" opacity="0.85" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="160" cy="-30" r="11" fill="#C9A227" opacity="0.85"/>
+    <circle cx="155" cy="-60" r="10" fill="#046A38" opacity="0.85"/>
+    <!-- Centre pendant -->
+    <circle cx="0" cy="170" r="18" fill="#046A38" opacity="0.9"/>
+    <circle cx="0" cy="170" r="10" fill="#C9A227" opacity="0.7"/>
+  </g>
+  <!-- Bracelet bottom-left -->
+  <g transform="translate(200,520)">
+    <ellipse cx="0" cy="0" rx="55" ry="35" fill="none" stroke="#E3C4A8" stroke-width="2.5" opacity="0.5"/>
+    <circle cx="-50" cy="8" r="7" fill="#046A38" opacity="0.7"/>
+    <circle cx="-38" cy="-22" r="7" fill="#C9A227" opacity="0.7"/>
+    <circle cx="-15" cy="-32" r="7" fill="#E3C4A8" opacity="0.7" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="15" cy="-32" r="7" fill="#046A38" opacity="0.7"/>
+    <circle cx="38" cy="-22" r="7" fill="#C9A227" opacity="0.7"/>
+    <circle cx="50" cy="8" r="7" fill="#1A1A1A" opacity="0.7"/>
+  </g>
+  <!-- Earrings bottom-right -->
+  <g transform="translate(680,500)">
+    <line x1="0" y1="-30" x2="0" y2="30" stroke="#C9A227" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="0" cy="-30" r="5" fill="#C9A227" opacity="0.8"/>
+    <circle cx="0" cy="-15" r="7" fill="#046A38" opacity="0.8"/>
+    <circle cx="0" cy="2" r="8" fill="#E3C4A8" opacity="0.8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="0" cy="20" r="9" fill="#046A38" opacity="0.8"/>
+    <circle cx="0" cy="40" r="10" fill="#C9A227" opacity="0.8"/>
+    <line x1="50" y1="-30" x2="50" y2="30" stroke="#C9A227" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="50" cy="-30" r="5" fill="#C9A227" opacity="0.8"/>
+    <circle cx="50" cy="-15" r="7" fill="#046A38" opacity="0.8"/>
+    <circle cx="50" cy="2" r="8" fill="#E3C4A8" opacity="0.8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="50" cy="20" r="9" fill="#046A38" opacity="0.8"/>
+    <circle cx="50" cy="40" r="10" fill="#C9A227" opacity="0.8"/>
+  </g>
+  <!-- Brand text -->
+  <text x="450" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#046A38" opacity="0.3" letter-spacing="0.2em">THEBEADSBOX</text>
+</svg>

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs>
+    <radialGradient id="bg3" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#F7ECE0"/>
+      <stop offset="100%" stop-color="#E8D5C0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#bg3)"/>
+  <!-- Left earring -->
+  <g transform="translate(320,280)">
+    <!-- Hook -->
+    <path d="M0,-80 Q-15,-70 -8,-50" fill="none" stroke="#C9A227" stroke-width="2" opacity="0.7"/>
+    <circle cx="0" cy="-80" r="3" fill="#C9A227" opacity="0.8"/>
+    <!-- Connector -->
+    <line x1="-6" y1="-48" x2="0" y2="-30" stroke="#C9A227" stroke-width="1.5" opacity="0.5"/>
+    <!-- Bead stack -->
+    <circle cx="0" cy="-24" r="8" fill="#C9A227"/>
+    <circle cx="0" cy="0" r="10" fill="#F6F6F6" stroke="#ddd" stroke-width="1"/>
+    <circle cx="0" cy="28" r="12" fill="#1A1A1A"/>
+    <circle cx="0" cy="58" r="14" fill="#C9A227"/>
+    <circle cx="0" cy="92" r="16" fill="#D97706"/>
+    <!-- Dangling detail -->
+    <line x1="0" y1="108" x2="0" y2="130" stroke="#C9A227" stroke-width="1" opacity="0.5"/>
+    <circle cx="0" cy="136" r="6" fill="#C9A227" opacity="0.7"/>
+    <!-- Small accent beads -->
+    <circle cx="-18" cy="58" r="5" fill="#F6F6F6" opacity="0.6" stroke="#ddd" stroke-width="0.5"/>
+    <circle cx="18" cy="58" r="5" fill="#F6F6F6" opacity="0.6" stroke="#ddd" stroke-width="0.5"/>
+    <circle cx="-22" cy="92" r="5" fill="#1A1A1A" opacity="0.5"/>
+    <circle cx="22" cy="92" r="5" fill="#1A1A1A" opacity="0.5"/>
+  </g>
+  <!-- Right earring -->
+  <g transform="translate(580,280)">
+    <!-- Hook -->
+    <path d="M0,-80 Q-15,-70 -8,-50" fill="none" stroke="#C9A227" stroke-width="2" opacity="0.7"/>
+    <circle cx="0" cy="-80" r="3" fill="#C9A227" opacity="0.8"/>
+    <!-- Connector -->
+    <line x1="-6" y1="-48" x2="0" y2="-30" stroke="#C9A227" stroke-width="1.5" opacity="0.5"/>
+    <!-- Bead stack -->
+    <circle cx="0" cy="-24" r="8" fill="#C9A227"/>
+    <circle cx="0" cy="0" r="10" fill="#F6F6F6" stroke="#ddd" stroke-width="1"/>
+    <circle cx="0" cy="28" r="12" fill="#1A1A1A"/>
+    <circle cx="0" cy="58" r="14" fill="#C9A227"/>
+    <circle cx="0" cy="92" r="16" fill="#D97706"/>
+    <!-- Dangling detail -->
+    <line x1="0" y1="108" x2="0" y2="130" stroke="#C9A227" stroke-width="1" opacity="0.5"/>
+    <circle cx="0" cy="136" r="6" fill="#C9A227" opacity="0.7"/>
+    <!-- Small accent beads -->
+    <circle cx="-18" cy="58" r="5" fill="#F6F6F6" opacity="0.6" stroke="#ddd" stroke-width="0.5"/>
+    <circle cx="18" cy="58" r="5" fill="#F6F6F6" opacity="0.6" stroke="#ddd" stroke-width="0.5"/>
+    <circle cx="-22" cy="92" r="5" fill="#1A1A1A" opacity="0.5"/>
+    <circle cx="22" cy="92" r="5" fill="#1A1A1A" opacity="0.5"/>
+  </g>
+  <!-- Subtle display stand line -->
+  <line x1="250" y1="500" x2="650" y2="500" stroke="#046A38" stroke-width="0.5" opacity="0.1"/>
+  <text x="450" y="620" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#046A38" opacity="0.25" letter-spacing="0.15em">BEADED DROP EARRINGS</text>
+</svg>

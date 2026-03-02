@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs>
+    <radialGradient id="bg2" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#F7ECE0"/>
+      <stop offset="100%" stop-color="#E8D5C0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#bg2)"/>
+  <!-- Shadow -->
+  <ellipse cx="450" cy="420" rx="160" ry="30" fill="#000" opacity="0.04"/>
+  <!-- Bracelet - elliptical shape with perspective -->
+  <g transform="translate(450,320)">
+    <!-- Back of bracelet (behind) -->
+    <ellipse cx="0" cy="0" rx="150" ry="80" fill="none" stroke="#8B7355" stroke-width="1" opacity="0.15"
+             stroke-dasharray="4,8"/>
+    <!-- Front beads - main visible arc -->
+    <circle cx="-148" cy="12" r="14" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-140" cy="-28" r="15" fill="#046A38"/>
+    <circle cx="-124" cy="-58" r="14" fill="#0E7C7B"/>
+    <circle cx="-100" cy="-72" r="15" fill="#6B4F3B"/>
+    <circle cx="-72" cy="-78" r="14" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-42" cy="-80" r="15" fill="#046A38"/>
+    <circle cx="-12" cy="-80" r="14" fill="#0E7C7B"/>
+    <circle cx="18" cy="-80" r="15" fill="#6B4F3B"/>
+    <circle cx="48" cy="-78" r="14" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="76" cy="-72" r="15" fill="#046A38"/>
+    <circle cx="102" cy="-62" r="14" fill="#0E7C7B"/>
+    <circle cx="124" cy="-46" r="15" fill="#6B4F3B"/>
+    <circle cx="140" cy="-24" r="14" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="148" cy="4" r="15" fill="#046A38"/>
+    <!-- Clasp detail -->
+    <rect x="146" y="16" width="8" height="4" rx="2" fill="#C9A227" opacity="0.6"/>
+    <rect x="-154" y="22" width="8" height="4" rx="2" fill="#C9A227" opacity="0.6"/>
+  </g>
+  <!-- Second bracelet - smaller, stacked -->
+  <g transform="translate(450,360) scale(0.75)">
+    <circle cx="-148" cy="12" r="12" fill="#046A38" opacity="0.5"/>
+    <circle cx="-140" cy="-28" r="12" fill="#E3C4A8" opacity="0.5" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-124" cy="-54" r="12" fill="#0E7C7B" opacity="0.5"/>
+    <circle cx="-100" cy="-66" r="12" fill="#046A38" opacity="0.5"/>
+    <circle cx="-72" cy="-72" r="12" fill="#6B4F3B" opacity="0.5"/>
+    <circle cx="-42" cy="-74" r="12" fill="#E3C4A8" opacity="0.5" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-12" cy="-74" r="12" fill="#046A38" opacity="0.5"/>
+    <circle cx="18" cy="-74" r="12" fill="#0E7C7B" opacity="0.5"/>
+    <circle cx="48" cy="-72" r="12" fill="#6B4F3B" opacity="0.5"/>
+    <circle cx="76" cy="-66" r="12" fill="#E3C4A8" opacity="0.5" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="102" cy="-56" r="12" fill="#046A38" opacity="0.5"/>
+    <circle cx="124" cy="-40" r="12" fill="#0E7C7B" opacity="0.5"/>
+    <circle cx="140" cy="-20" r="12" fill="#6B4F3B" opacity="0.5"/>
+    <circle cx="148" cy="4" r="12" fill="#046A38" opacity="0.5"/>
+  </g>
+  <text x="450" y="620" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#046A38" opacity="0.25" letter-spacing="0.15em">CLASSIC BEADED BRACELET</text>
+</svg>

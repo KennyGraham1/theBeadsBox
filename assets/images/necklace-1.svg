@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="675" viewBox="0 0 900 675">
+  <defs>
+    <radialGradient id="bg1" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#F7ECE0"/>
+      <stop offset="100%" stop-color="#E8D5C0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="675" fill="url(#bg1)"/>
+  <!-- Soft shadow under necklace -->
+  <ellipse cx="450" cy="520" rx="200" ry="20" fill="#000" opacity="0.04"/>
+  <!-- Necklace display -->
+  <g transform="translate(450,260)">
+    <!-- Chain/string -->
+    <path d="M-200,-160 Q-220,20 -120,140 Q-40,220 0,230 Q40,220 120,140 Q220,20 200,-160"
+          fill="none" stroke="#8B7355" stroke-width="1.5" opacity="0.3"/>
+    <!-- Large beads -->
+    <circle cx="-195" cy="-130" r="13" fill="#046A38"/>
+    <circle cx="-200" cy="-95" r="14" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-202" cy="-58" r="13" fill="#C9A227"/>
+    <circle cx="-200" cy="-22" r="14" fill="#1A1A1A"/>
+    <circle cx="-192" cy="14" r="13" fill="#046A38"/>
+    <circle cx="-180" cy="48" r="14" fill="#B3261E"/>
+    <circle cx="-164" cy="80" r="13" fill="#C9A227"/>
+    <circle cx="-142" cy="108" r="14" fill="#046A38"/>
+    <circle cx="-116" cy="132" r="15" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="-86" cy="154" r="14" fill="#1A1A1A"/>
+    <circle cx="-52" cy="176" r="15" fill="#046A38"/>
+    <circle cx="-18" cy="194" r="16" fill="#C9A227"/>
+    <!-- Center pendant bead -->
+    <circle cx="0" cy="230" r="22" fill="#046A38"/>
+    <circle cx="0" cy="230" r="12" fill="#C9A227" opacity="0.8"/>
+    <circle cx="0" cy="230" r="5" fill="#046A38" opacity="0.6"/>
+    <!-- Right side -->
+    <circle cx="18" cy="194" r="16" fill="#B3261E"/>
+    <circle cx="52" cy="176" r="15" fill="#046A38"/>
+    <circle cx="86" cy="154" r="14" fill="#C9A227"/>
+    <circle cx="116" cy="132" r="15" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="142" cy="108" r="14" fill="#046A38"/>
+    <circle cx="164" cy="80" r="13" fill="#1A1A1A"/>
+    <circle cx="180" cy="48" r="14" fill="#B3261E"/>
+    <circle cx="192" cy="14" r="13" fill="#046A38"/>
+    <circle cx="200" cy="-22" r="14" fill="#C9A227"/>
+    <circle cx="202" cy="-58" r="13" fill="#E3C4A8" stroke="#d4b08c" stroke-width="1"/>
+    <circle cx="200" cy="-95" r="14" fill="#046A38"/>
+    <circle cx="195" cy="-130" r="13" fill="#1A1A1A"/>
+  </g>
+  <!-- Label -->
+  <text x="450" y="620" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#046A38" opacity="0.25" letter-spacing="0.15em">KENTE INSPIRED NECKLACE</text>
+</svg>
