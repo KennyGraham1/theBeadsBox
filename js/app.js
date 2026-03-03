@@ -1,7 +1,7 @@
 // ====== Configure WhatsApp ======
 // Replace these two values
-const WHATSAPP_PHONE_E164 = "233000000000"; // Example Ghana country code 233, then number. No plus sign.
-const WHATSAPP_CATALOGUE_URL = "https://wa.me/c/233000000000"; // Replace with your WhatsApp Business catalogue link
+const WHATSAPP_PHONE_E164 = "233552845069";
+const WHATSAPP_CATALOGUE_URL = "https://wa.me/c/233552845069";
 
 // Currency symbol and format
 const CURRENCY = "GHS";
@@ -104,7 +104,7 @@ function cartTotal() {
 // ====== WhatsApp helpers ======
 function waLinkWithText(text) {
   const encoded = encodeURIComponent(text);
-  return `https://wa.me/c/233552845069`;
+  return `https://wa.me/${WHATSAPP_PHONE_E164}?text=${encoded}`;
 }
 
 function productInquiryText(product, selectedColours, note) {
