@@ -241,22 +241,37 @@ function init() {
   updateCartUI();
 
   // Scroll spy — highlight active nav link as user scrolls
-  const spySections = document.querySelectorAll("main section[id]");
+  const spySections = Array.from(document.querySelectorAll("main section[id]"));
   const spyLinks = document.querySelectorAll(".nav-link");
-  const spyObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          spyLinks.forEach((link) => {
-            link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
-          });
-        }
-      });
-    },
-    { threshold: 0, rootMargin: "-80px 0px -55% 0px" }
-  );
-  spySections.forEach((s) => spyObserver.observe(s));
+
+  function updateActiveNav() {
+    // Use viewport-relative positions — works even when the page can't
+    // scroll far enough for the last sections to reach a fixed threshold.
+    const threshold = window.innerHeight * 0.45;
+    let current = spySections[0]?.id || "";
+    for (const section of spySections) {
+      if (section.getBoundingClientRect().top <= threshold) {
+        current = section.id;
+      }
+    }
+    spyLinks.forEach((link) => {
+      link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
+    });
+  }
+
+  // Set active immediately on click — smooth scroll may end just before
+  // the section crosses the threshold, so click is the reliable trigger.
+  spyLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      spyLinks.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+    });
+  });
+
+  window.addEventListener("scroll", updateActiveNav, { passive: true });
+  // Re-run once scroll fully settles (catches smooth-scroll end edge case)
+  window.addEventListener("scrollend", updateActiveNav, { passive: true });
+  updateActiveNav(); // set correct state on initial load
 
   // Back-to-top button
   window.addEventListener("scroll", () => {

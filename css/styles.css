@@ -188,8 +188,20 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 .nav-link.active {
   color: var(--emerald-dark);
-  background: var(--emerald-light);
+  background: rgba(4, 106, 56, 0.12);
   font-weight: 600;
+  position: relative;
+}
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--emerald);
 }
 
 .nav-toggle {
@@ -441,6 +453,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* ===== Sections ===== */
 .section { padding: 80px 0; }
+/* Push anchor targets below the sticky header when navigating via nav links */
+section[id] { scroll-margin-top: 72px; }
 .section-alt {
   background: rgba(4, 106, 56, 0.025);
   border-top: 1px solid var(--border);
