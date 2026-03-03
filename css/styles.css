@@ -249,22 +249,27 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .btn-primary {
   background: var(--emerald);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(4, 106, 56, 0.18);
+  box-shadow: 0 2px 10px rgba(4, 106, 56, 0.22), 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 .btn-primary:hover {
   background: var(--emerald-dark);
-  box-shadow: 0 6px 20px rgba(4, 106, 56, 0.28);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(4, 106, 56, 0.32), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .btn-secondary {
-  background: transparent;
-  border-color: rgba(4, 106, 56, 0.2);
+  background: rgba(4, 106, 56, 0.06);
+  border-color: rgba(4, 106, 56, 0.4);
   color: var(--emerald-dark);
 }
 .btn-secondary:hover {
   background: var(--emerald-light);
-  border-color: rgba(4, 106, 56, 0.35);
+  border-color: rgba(4, 106, 56, 0.55);
 }
 
 .pill {
@@ -294,7 +299,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.52);
+  background: linear-gradient(135deg, rgba(3, 84, 45, 0.78) 0%, rgba(10, 10, 10, 0.62) 100%);
   z-index: 0;
 }
 .hero-inner {
@@ -312,14 +317,16 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   gap: 6px;
   padding: 6px 14px;
   border-radius: 999px;
-  background: var(--emerald-light);
-  color: var(--emerald-dark);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 20px;
-  border: 1px solid rgba(4, 106, 56, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .hero-copy h1 {
@@ -341,6 +348,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 32px;
+}
+.hero-cta .btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero-cta .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 .hero-bullets {
   margin: 0;
@@ -403,6 +421,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 10px;
+  transition: background 200ms var(--ease), color 200ms var(--ease);
+}
+.trust-item:hover {
+  background: var(--emerald-light);
+  color: var(--emerald-dark);
 }
 .trust-item svg {
   color: var(--emerald);
@@ -484,9 +509,27 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  position: relative;
+  transition: opacity 500ms var(--ease-out), transform 400ms var(--ease-out),
+              box-shadow 350ms var(--ease);
+}
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--emerald);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 350ms var(--ease);
+  z-index: 1;
 }
 .product-card:hover {
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px);
+}
+.product-card:hover::before {
+  transform: scaleX(1);
 }
 
 .product-media {
@@ -726,6 +769,11 @@ form input:focus, form textarea:focus {
 }
 
 /* ===== WhatsApp Float ===== */
+@keyframes waPulse {
+  0%   { box-shadow: 0 4px 24px rgba(4, 106, 56, 0.3), 0 0 0 0 rgba(4, 106, 56, 0.45); }
+  70%  { box-shadow: 0 4px 24px rgba(4, 106, 56, 0.3), 0 0 0 14px rgba(4, 106, 56, 0); }
+  100% { box-shadow: 0 4px 24px rgba(4, 106, 56, 0.3), 0 0 0 0 rgba(4, 106, 56, 0); }
+}
 .wa-float {
   position: fixed;
   right: 20px;
@@ -737,16 +785,17 @@ form input:focus, form textarea:focus {
   font-weight: 700;
   font-size: 0.88rem;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 24px rgba(4, 106, 56, 0.3);
   border: none;
-  transition: all 250ms var(--ease);
+  transition: background 250ms var(--ease), transform 250ms var(--ease);
   display: flex;
   align-items: center;
   gap: 8px;
+  animation: waPulse 2.4s ease-out infinite;
 }
 .wa-float:hover {
   background: var(--emerald-dark);
   transform: translateY(-2px);
+  animation: none;
   box-shadow: 0 8px 32px rgba(4, 106, 56, 0.4);
 }
 
@@ -796,7 +845,7 @@ form input:focus, form textarea:focus {
 }
 .drawer-head h3 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 }
 .icon-btn {
   border: 1px solid var(--border);
@@ -837,18 +886,30 @@ form input:focus, form textarea:focus {
   gap: 4px;
 }
 .qty button {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--emerald-light);
   cursor: pointer;
   font-family: inherit;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 1rem;
   transition: background 200ms var(--ease);
 }
 .qty button:hover { background: rgba(4, 106, 56, 0.14); }
+.qty button[aria-label="Remove item"] {
+  background: transparent;
+  border-color: rgba(180, 0, 0, 0.15);
+  color: #b91c1c;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: auto;
+  padding: 0 10px;
+}
+.qty button[aria-label="Remove item"]:hover {
+  background: rgba(180, 0, 0, 0.06);
+}
 
 .drawer-foot {
   padding: 18px 20px;
@@ -913,7 +974,7 @@ form input:focus, form textarea:focus {
   .product-grid { grid-template-columns: 1fr; }
   .nav-toggle { display: inline-flex; }
   .nav-links {
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     background: var(--card);
@@ -922,8 +983,21 @@ form input:focus, form textarea:focus {
     padding: 8px;
     margin-top: 8px;
     box-shadow: var(--shadow);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 350ms var(--ease), opacity 250ms var(--ease),
+                padding 250ms var(--ease);
+    padding-top: 0;
+    padding-bottom: 0;
   }
-  .nav-links.open { display: flex; }
+  .nav-links.open {
+    max-height: 300px;
+    opacity: 1;
+    pointer-events: auto;
+    padding: 8px;
+  }
   .hero-bullets { flex-direction: column; gap: 8px; }
   .trust-inner { gap: 16px; }
   .trust-item span { font-size: 0.78rem; }

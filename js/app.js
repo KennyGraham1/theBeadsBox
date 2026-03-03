@@ -206,6 +206,13 @@ function init() {
     const text = `Hello, my name is ${name}.${email ? ` Email: ${email}.` : ""}\n\n${message}`;
     window.open(waLinkWithText(text), "_blank", "noopener,noreferrer");
     contactForm.reset();
+    const submitBtn = contactForm.querySelector("[type=submit]");
+    submitBtn.textContent = "✓ Sent — we'll reply on WhatsApp";
+    submitBtn.disabled = true;
+    setTimeout(() => {
+      submitBtn.textContent = "Send via WhatsApp";
+      submitBtn.disabled = false;
+    }, 3000);
   });
 
   // Mobile nav toggle
@@ -332,6 +339,12 @@ function renderProducts(products) {
     addBtn.addEventListener("click", () => {
       const note = card.querySelector(`[data-note="${p.id}"]`)?.value || "";
       addToCart(p, Array.from(selected), note);
+      addBtn.textContent = "✓ Added";
+      addBtn.disabled = true;
+      setTimeout(() => {
+        addBtn.textContent = "Add to cart";
+        addBtn.disabled = false;
+      }, 1400);
     });
   });
 
