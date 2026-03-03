@@ -1,5 +1,4 @@
 // ====== Configure WhatsApp ======
-// Replace these two values
 const WHATSAPP_PHONE_E164 = "233552845069";
 const WHATSAPP_CATALOGUE_URL = "https://wa.me/c/233552845069";
 
@@ -80,7 +79,6 @@ const PRODUCTS = [
 // ====== State ======
 const STORAGE_KEY = "afroBeadsCartV1";
 let cart = loadCart();
-let activeViewProducts = [...PRODUCTS];
 
 function loadCart() {
   try {
@@ -242,7 +240,6 @@ function applyFilters() {
   if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
   if (sort === "name-asc") list.sort((a, b) => a.name.localeCompare(b.name));
 
-  activeViewProducts = list;
   renderProducts(list);
 }
 
@@ -431,14 +428,14 @@ function updateCartUI() {
   });
 
   // Update checkout link each time cart changes
-  checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+  if (checkoutWhatsAppBtn) checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
 }
 
 function openDrawer() {
   if (!cartDrawer) return;
   cartDrawer.removeAttribute("hidden");
   document.body.style.overflow = "hidden";
-  checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+  if (checkoutWhatsAppBtn) checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
 }
 function closeDrawer() {
   if (!cartDrawer) return;
