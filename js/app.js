@@ -119,7 +119,7 @@ function cartCheckoutText() {
     return `${idx + 1}. ${item.name} | Qty: ${item.qty} | ${fmtMoney(item.price)} each | Colours: ${colours}${note}`;
   });
 
-  return `Hello, I would like to checkout with the following items:\n\n${lines.join("\n")}\n\nTotal: ${fmtMoney(cartTotal())}\n\nPlease confirm availability, delivery fees, and payment details.`;
+  return `Hello, I would like to place an order for the following items:\n\n${lines.join("\n")}\n\nOrder total: ${fmtMoney(cartTotal())}\n\nPlease confirm availability, delivery options, and payment details. Thank you!`;
 }
 
 // ====== DOM ======
@@ -145,6 +145,8 @@ const waFloating = document.getElementById("waFloating");
 // Nav mobile toggle
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.getElementById("navLinks");
+
+const backToTop = document.getElementById("backToTop");
 
 init();
 
@@ -198,8 +200,15 @@ function init() {
     const email = (fd.get("email") || "").toString().trim();
     const message = (fd.get("message") || "").toString().trim();
 
+    // Clear any previous error
+    const prevErr = contactForm.querySelector(".form-error");
+    if (prevErr) prevErr.remove();
+
     if (!name || !message) {
-      alert("Please enter your name and message.");
+      const err = document.createElement("p");
+      err.className = "form-error";
+      err.textContent = "Please fill in your name and message before sending.";
+      contactForm.insertBefore(err, contactForm.querySelector("[type=submit]"));
       return;
     }
 
@@ -230,6 +239,30 @@ function init() {
   });
 
   updateCartUI();
+
+  // Scroll spy — highlight active nav link as user scrolls
+  const spySections = document.querySelectorAll("main section[id]");
+  const spyLinks = document.querySelectorAll(".nav-link");
+  const spyObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          spyLinks.forEach((link) => {
+            link.classList.toggle("active", link.getAttribute("href") === `#${id}`);
+          });
+        }
+      });
+    },
+    { threshold: 0, rootMargin: "-80px 0px -55% 0px" }
+  );
+  spySections.forEach((s) => spyObserver.observe(s));
+
+  // Back-to-top button
+  window.addEventListener("scroll", () => {
+    if (backToTop) backToTop.hidden = window.scrollY < 400;
+  }, { passive: true });
+  backToTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 }
 
 function applyFilters() {
@@ -253,6 +286,21 @@ function applyFilters() {
 function renderProducts(products) {
   if (!productGrid) return;
   productGrid.innerHTML = "";
+
+  if (!products.length) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.innerHTML = `
+      <p>No products match your search.</p>
+      <button class="btn btn-secondary" type="button">Clear search</button>
+    `;
+    empty.querySelector("button").addEventListener("click", () => {
+      if (searchInput) searchInput.value = "";
+      applyFilters();
+    });
+    productGrid.appendChild(empty);
+    return;
+  }
 
   products.forEach((p) => {
     const card = document.createElement("article");
@@ -379,7 +427,18 @@ function sameSelection(a = [], b = []) {
 }
 
 function updateCartUI() {
-  if (cartCountEl) cartCountEl.textContent = String(cartCount());
+  if (cartCountEl) {
+    const prevCount = Number(cartCountEl.textContent) || 0;
+    const newCount = cartCount();
+    cartCountEl.textContent = String(newCount);
+    cartCountEl.style.display = newCount === 0 ? "none" : "";
+    if (newCount > prevCount && newCount > 0) {
+      cartCountEl.classList.remove("pop");
+      void cartCountEl.offsetWidth; // force reflow so animation restarts
+      cartCountEl.classList.add("pop");
+      cartCountEl.addEventListener("animationend", () => cartCountEl.classList.remove("pop"), { once: true });
+    }
+  }
   if (cartTotalEl) cartTotalEl.textContent = fmtMoney(cartTotal());
 
   if (!cartItemsEl) return;
@@ -444,16 +503,44 @@ function updateCartUI() {
   if (checkoutWhatsAppBtn) checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
 }
 
+function focusTrapHandler(e) {
+  if (e.key !== "Tab") return;
+  const panel = cartDrawer.querySelector(".drawer-panel");
+  const focusable = Array.from(
+    panel.querySelectorAll('a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])')
+  ).filter((el) => el.offsetParent !== null);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (e.shiftKey) {
+    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+  } else {
+    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+}
+
 function openDrawer() {
   if (!cartDrawer) return;
   cartDrawer.removeAttribute("hidden");
   document.body.style.overflow = "hidden";
   if (checkoutWhatsAppBtn) checkoutWhatsAppBtn.href = waLinkWithText(cartCheckoutText());
+  // Move focus to close button and trap Tab inside drawer
+  const closeBtn = cartDrawer.querySelector("[data-close-drawer]");
+  if (closeBtn) closeBtn.focus();
+  cartDrawer.addEventListener("keydown", focusTrapHandler);
 }
+
 function closeDrawer() {
-  if (!cartDrawer) return;
-  cartDrawer.setAttribute("hidden", "");
-  document.body.style.overflow = "";
+  if (!cartDrawer || cartDrawer.classList.contains("closing")) return;
+  cartDrawer.removeEventListener("keydown", focusTrapHandler);
+  cartDrawer.classList.add("closing");
+  const panel = cartDrawer.querySelector(".drawer-panel");
+  panel.addEventListener("animationend", () => {
+    cartDrawer.classList.remove("closing");
+    cartDrawer.setAttribute("hidden", "");
+    document.body.style.overflow = "";
+    cartBtn?.focus();
+  }, { once: true });
 }
 
 function escapeHtml(str) {

@@ -186,6 +186,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: var(--ink);
   background: var(--emerald-light);
 }
+.nav-link.active {
+  color: var(--emerald-dark);
+  background: var(--emerald-light);
+  font-weight: 600;
+}
 
 .nav-toggle {
   display: none;
@@ -704,6 +709,35 @@ form input:focus, form textarea:focus {
   background: var(--card);
 }
 .form-hint { margin: 14px 0 0; color: var(--muted); font-size: 0.82rem; }
+.form-error {
+  color: #b91c1c;
+  font-size: 0.82rem;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  background: rgba(185, 28, 28, 0.06);
+  border: 1px solid rgba(185, 28, 28, 0.18);
+  border-radius: 10px;
+}
+
+/* ===== Empty search state ===== */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--muted);
+}
+.empty-state p {
+  font-size: 1rem;
+  margin: 0 0 16px;
+}
+
+/* ===== Cart badge pop ===== */
+@keyframes cartPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.6); }
+  100% { transform: scale(1); }
+}
+.pill.pop { animation: cartPop 350ms var(--ease-spring); }
 
 /* ===== Footer ===== */
 .site-footer {
@@ -799,6 +833,30 @@ form input:focus, form textarea:focus {
   box-shadow: 0 8px 32px rgba(4, 106, 56, 0.4);
 }
 
+/* ===== Back to top ===== */
+.back-top {
+  position: fixed;
+  right: 22px;
+  bottom: 86px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--emerald);
+  transition: background 200ms var(--ease), transform 200ms var(--ease);
+  z-index: 40;
+}
+.back-top[hidden] { display: none; }
+.back-top:hover {
+  background: var(--emerald-light);
+  transform: translateY(-3px);
+}
+
 /* ===== Cart Drawer ===== */
 .drawer[hidden] { display: none; }
 .drawer {
@@ -835,6 +893,16 @@ form input:focus, form textarea:focus {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
 }
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.drawer.closing .drawer-panel { animation: slideOut 280ms var(--ease) forwards; }
+.drawer.closing .drawer-backdrop { animation: fadeOut 240ms var(--ease) forwards; }
 
 .drawer-head {
   padding: 18px 20px 14px;
