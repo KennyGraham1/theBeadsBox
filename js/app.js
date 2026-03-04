@@ -147,10 +147,17 @@ const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.getElementById("navLinks");
 
 const backToTop = document.getElementById("backToTop");
+const siteHeader = document.querySelector(".site-header");
+const announcementBar = document.querySelector(".announcement-bar");
+
+let headerHeight = 0;
+let announcementHeight = 0;
 
 init();
 
 function init() {
+  syncHeaderMetrics();
+
   // Set year
   document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -245,15 +252,34 @@ function init() {
   const spyLinks = document.querySelectorAll(".nav-link");
 
   function updateActiveNav() {
-    // Use viewport-relative positions — works even when the page can't
-    // scroll far enough for the last sections to reach a fixed threshold.
-    const threshold = window.innerHeight * 0.45;
-    let current = spySections[0]?.id || "";
+    if (!spySections.length) return;
+
+    const header = document.querySelector(".site-header");
+    const offset = (header?.getBoundingClientRect().height || 0) + 12;
+    const viewportTop = offset;
+    const viewportBottom = window.innerHeight;
+
+    let bestSection = spySections[0];
+    let bestScore = -1;
+
     for (const section of spySections) {
-      if (section.getBoundingClientRect().top <= threshold) {
-        current = section.id;
+      const rect = section.getBoundingClientRect();
+      const top = Math.max(rect.top, viewportTop);
+      const bottom = Math.min(rect.bottom, viewportBottom);
+      const visible = Math.max(0, bottom - top);
+      const score = visible / Math.max(1, rect.height);
+      if (score > bestScore) {
+        bestScore = score;
+        bestSection = section;
       }
     }
+
+    // Ensure the last section becomes active when the user hits the bottom.
+    const doc = document.documentElement;
+    const atBottom = window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
+    if (atBottom) bestSection = spySections[spySections.length - 1];
+
+    const current = bestSection?.id || "";
     spyLinks.forEach((link) => {
       link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
     });
@@ -268,16 +294,49 @@ function init() {
     });
   });
 
-  window.addEventListener("scroll", updateActiveNav, { passive: true });
+  // rAF throttle for scroll handler (scroll spy + back-to-top)
+  let scrollTicking = false;
+  const onScroll = () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      updateActiveNav();
+      if (backToTop) backToTop.hidden = window.scrollY < 400;
+      if (siteHeader) siteHeader.classList.toggle("is-scrolled", window.scrollY > 10);
+      updateHeaderShift();
+      scrollTicking = false;
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
   // Re-run once scroll fully settles (catches smooth-scroll end edge case)
   window.addEventListener("scrollend", updateActiveNav, { passive: true });
   updateActiveNav(); // set correct state on initial load
 
   // Back-to-top button
-  window.addEventListener("scroll", () => {
-    if (backToTop) backToTop.hidden = window.scrollY < 400;
-  }, { passive: true });
+  if (backToTop) backToTop.hidden = window.scrollY < 400;
+  if (siteHeader) siteHeader.classList.toggle("is-scrolled", window.scrollY > 10);
+  updateHeaderShift();
   backToTop?.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+  window.addEventListener("resize", () => {
+    syncHeaderMetrics();
+    updateHeaderShift();
+    updateActiveNav();
+  }, { passive: true });
+}
+
+function syncHeaderMetrics() {
+  if (!siteHeader) return;
+  headerHeight = Math.round(siteHeader.getBoundingClientRect().height);
+  announcementHeight = Math.round(announcementBar?.getBoundingClientRect().height || 0);
+  document.documentElement.style.setProperty("--header-h", `${headerHeight}px`);
+  document.documentElement.style.setProperty("--announce-h", `${announcementHeight}px`);
+}
+
+function updateHeaderShift() {
+  if (!siteHeader) return;
+  const shift = Math.max(0, announcementHeight - window.scrollY);
+  document.documentElement.style.setProperty("--header-shift", `${shift}px`);
 }
 
 function applyFilters() {
